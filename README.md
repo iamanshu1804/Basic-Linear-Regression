@@ -100,7 +100,9 @@ The target is named `Price` in the notebook. It is measured in units of
 8. Trains a `LinearRegression` model using all eight features.
 9. Predicts house values for the test set.
 10. Calculates R-squared and adjusted R-squared.
-11. Uses three diagnostic graphs:
+11. Checks the input features for multicollinearity using Variance Inflation
+    Factor (VIF).
+12. Uses three diagnostic graphs:
     - Actual versus predicted values
     - The distribution of residuals
     - Residuals versus predicted values
@@ -137,6 +139,39 @@ example, `AveRooms` and `AveBedrms` are strongly related, as are `Latitude`
 and `Longitude`. This means some features contain overlapping information and
 their individual regression coefficients should be interpreted carefully.
 
+### Multicollinearity and VIF analysis
+
+The notebook calculates Variance Inflation Factor (VIF) after adding an
+intercept column with `statsmodels`. VIF measures how much the variance of a
+feature's estimated regression coefficient is inflated because that feature is
+related to the other input features.
+
+The notebook reports the following VIF values:
+
+| Feature | VIF |
+|---|---:|
+| `Latitude` | 9.30 |
+| `Longitude` | 8.96 |
+| `AveRooms` | 8.34 |
+| `AveBedrms` | 6.99 |
+| `MedInc` | 2.50 |
+| `HouseAge` | 1.24 |
+| `Population` | 1.14 |
+| `AveOccup` | 1.01 |
+
+`Latitude`, `Longitude`, `AveRooms`, and `AveBedrms` have the highest VIF
+values. This is consistent with the correlation heatmap: the geographic
+features contain overlapping location information, while the room-related
+features describe related aspects of housing.
+
+These values indicate moderate multicollinearity, but none exceeds the
+common high-multicollinearity threshold of 10. The features are therefore
+retained in the baseline model because location and housing characteristics
+are useful for predicting house values. Multicollinearity can make individual
+Linear Regression coefficients less stable without necessarily making the
+predictions unusable. Ridge Regression is a suitable regularised model to
+test as a future comparison.
+
 ## Technologies used
 
 - Python
@@ -146,6 +181,7 @@ their individual regression coefficients should be interpreted carefully.
 - Matplotlib
 - Seaborn
 - scikit-learn
+- statsmodels
 
 ## How to run the notebooks
 
@@ -153,7 +189,7 @@ their individual regression coefficients should be interpreted carefully.
 2. Install the required packages:
 
    ```bash
-   pip install numpy pandas matplotlib seaborn scikit-learn jupyter
+   pip install numpy pandas matplotlib seaborn scikit-learn statsmodels jupyter
    ```
 
 3. Start Jupyter:
@@ -174,7 +210,8 @@ include:
 - Compare Linear Regression with Ridge, Lasso, Random Forest, and Gradient
   Boosting models.
 - Add a baseline model that always predicts the mean target value.
-- Calculate Variance Inflation Factor (VIF) to investigate multicollinearity.
+- Compare the baseline model with Ridge Regression to evaluate the effect of
+  regularisation on correlated features.
 - Add a model-comparison table and document the results.
 - Improve the plots with reference lines, units, legends, and explanatory
   captions.
