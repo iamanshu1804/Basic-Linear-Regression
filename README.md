@@ -205,7 +205,6 @@ test as a future comparison.
 The current notebooks establish interpretable baselines. Possible next steps
 include:
 
-- Add MAE and RMSE to the multiple regression notebook.
 - Use five-fold cross-validation instead of relying on one train-test split.
 - Compare Linear Regression with Ridge, Lasso, Random Forest, and Gradient
   Boosting models.
